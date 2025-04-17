@@ -16,12 +16,12 @@ class _IntroScreenState extends State<IntroScreen> {
     {
       'name': 'Ngô Ngọc Thông',
       'role': 'Flutter Developer',
-      'image': 'image/user.png',
+      'image': 'assets/image/user.png',
     },
     {
       'name': 'Nguyễn Hoàng Phương Ngân',
       'role': 'Flutter Developer',
-      'image': 'image/user.png',
+      'image': 'assets/image/user.png',
     },
   ];
 
