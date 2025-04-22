@@ -1,7 +1,7 @@
 // ignore_for_file: deprecated_member_use
-
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeScreen extends StatelessWidget {
   @override
@@ -21,9 +21,22 @@ class HomeScreen extends StatelessWidget {
             icon: Icon(Icons.notifications, color: Colors.white),
             onPressed: () {},
           ),
-          IconButton(
+          PopupMenuButton<String>(
             icon: Icon(Icons.account_circle, color: Colors.white),
-            onPressed: () {},
+            onSelected: (value) {
+              if (value == 'logout') {
+                // Xử lý logout
+                _logout(context);
+              }
+            },
+            itemBuilder: (BuildContext context) {
+              return {'Logout': 'logout'}.entries.map((entry) {
+                return PopupMenuItem<String>(
+                  value: entry.value,
+                  child: Text(entry.key),
+                );
+              }).toList();
+            },
           ),
         ],
       ),
@@ -347,5 +360,38 @@ class HomeScreen extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  void _logout(BuildContext context) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder:
+          (context) => AlertDialog(
+            title: Text('Xác nhận'),
+            content: Text('Bạn có chắc chắn muốn đăng xuất?'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context, false),
+                child: Text('Hủy'),
+              ),
+              TextButton(
+                onPressed: () => Navigator.pop(context, true),
+                child: Text('Đăng xuất'),
+              ),
+            ],
+          ),
+    );
+
+    if (confirmed == true) {
+      // Tiến hành logout như trên
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.remove('auth_token');
+
+      Navigator.pushNamedAndRemoveUntil(
+        context,
+        '/login',
+        (Route<dynamic> route) => false,
+      );
+    }
   }
 }
