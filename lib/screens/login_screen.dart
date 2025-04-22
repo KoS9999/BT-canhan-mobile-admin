@@ -45,7 +45,7 @@ class _LoginScreenState extends State<LoginScreen> {
           );
         }
       } else {
-        _showErrorSnackBar('Đăng nhập thất bại: ${response.statusCode}');
+        _showErrorSnackBar('Tài khoản hoặc mặt khẩu không chính xác');
       }
     } catch (error) {
       _showErrorSnackBar('Lỗi: $error');
@@ -222,10 +222,19 @@ class _LoginScreenState extends State<LoginScreen> {
                 // Forgot Password
                 TextButton(
                   onPressed: () {
-                    // Add forgot password functionality
+                    Navigator.pushNamed(context, '/forgotpassword');
                   },
                   child: Text(
                     'Quên mật khẩu?',
+                    style: TextStyle(color: Colors.white70),
+                  ),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/register');
+                  },
+                  child: Text(
+                    'Chưa có tài khoản? Đăng ký',
                     style: TextStyle(color: Colors.white70),
                   ),
                 ),
