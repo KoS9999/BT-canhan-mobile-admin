@@ -1,5 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
+import '../config.dart';
 
 class IntroScreen extends StatefulWidget {
   @override
@@ -11,7 +14,6 @@ class _IntroScreenState extends State<IntroScreen> {
   late Timer _timer;
   int _currentPage = 0;
   final PageController _pageController = PageController();
-
   final List<Map<String, String>> teamMembers = [
     {
       'name': 'Ngô Ngọc Thông',
@@ -28,6 +30,7 @@ class _IntroScreenState extends State<IntroScreen> {
   @override
   void initState() {
     super.initState();
+    _verifyToken();
     _timer = Timer.periodic(Duration(seconds: 1), (timer) {
       if (_counter > 0) {
         setState(() => _counter--);
@@ -48,6 +51,29 @@ class _IntroScreenState extends State<IntroScreen> {
         curve: Curves.easeInOut,
       );
     });
+  }
+
+  Future<void> _verifyToken() async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token');
+
+    if (token != null) {
+      try {
+        final response = await http.get(
+          Uri.parse('${Config.baseUrl}/auth/verify-token'),
+          headers: {'Authorization': 'Bearer $token'},
+        );
+
+        if (response.statusCode == 200) {
+          _timer.cancel();
+          Navigator.pushReplacementNamed(context, '/home');
+        } else {
+          prefs.remove('token');
+        }
+      } catch (e) {
+        prefs.remove('token');
+      }
+    }
   }
 
   void _navigateToLogin() {
@@ -87,7 +113,6 @@ class _IntroScreenState extends State<IntroScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // App Logo/Title
                 Text(
                   'Coffee Manager',
                   style: TextStyle(
@@ -106,7 +131,6 @@ class _IntroScreenState extends State<IntroScreen> {
                   ),
                 ),
                 SizedBox(height: 40),
-
                 Container(
                   height: 300,
                   child: PageView.builder(
@@ -125,7 +149,6 @@ class _IntroScreenState extends State<IntroScreen> {
                   ),
                 ),
                 SizedBox(height: 20),
-
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: List.generate(
@@ -145,7 +168,6 @@ class _IntroScreenState extends State<IntroScreen> {
                   ),
                 ),
                 SizedBox(height: 40),
-
                 OutlinedButton(
                   onPressed: _navigateToLogin,
                   style: OutlinedButton.styleFrom(
