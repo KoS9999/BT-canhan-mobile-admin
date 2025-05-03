@@ -1,8 +1,7 @@
-// ignore_for_file: deprecated_member_use
-
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 import '../config.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -37,7 +36,13 @@ class _LoginScreenState extends State<LoginScreen> {
         final result = json.decode(response.body);
 
         if (result['token'] != null && result['user']['role'] == 'admin') {
+          final prefs = await SharedPreferences.getInstance();
+          await prefs.setString('token', result['token']);
+
           _showSuccessSnackBar('Đăng nhập thành công!');
+
+          await Future.delayed(Duration(milliseconds: 100));
+
           Navigator.pushReplacementNamed(context, '/home');
         } else {
           _showErrorSnackBar(
@@ -219,7 +224,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
                 SizedBox(height: 16),
 
-                // Forgot Password
                 TextButton(
                   onPressed: () {
                     Navigator.pushNamed(context, '/forgotpassword');
