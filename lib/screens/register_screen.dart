@@ -27,7 +27,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   bool _obscurePassword = true;
   bool _obscureConfirmPassword = true;
   bool _isOtpSent = false;
-  int _countdown = 300; // 5 phút = 300 giây
+  int _countdown = 300;
   late Timer _timer;
 
   @override

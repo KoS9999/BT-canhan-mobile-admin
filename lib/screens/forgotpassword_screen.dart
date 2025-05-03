@@ -19,7 +19,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     6,
     (index) => TextEditingController(),
   );
-  int _countdown = 300; // 5 phút = 300 giây
+  int _countdown = 300;
   late Timer _timer;
 
   @override
