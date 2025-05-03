@@ -206,16 +206,16 @@ class HomeScreen extends StatelessWidget {
         'color': Color(0xFF2196F3),
       },
       {
+        'icon': Iconsax.user,
+        'title': 'Khách hàng',
+        'route': '/users',
+        'color': Color(0xFF9C27B0),
+      },
+      {
         'icon': Iconsax.money,
         'title': 'Thanh toán',
         'route': '/payments',
         'color': Color(0xFF4CAF50),
-      },
-      {
-        'icon': Iconsax.user,
-        'title': 'Khách hàng',
-        'route': '/customers',
-        'color': Color(0xFF9C27B0),
       },
       {
         'icon': Iconsax.chart,
@@ -383,9 +383,8 @@ class HomeScreen extends StatelessWidget {
     );
 
     if (confirmed == true) {
-      // Tiến hành logout như trên
       final prefs = await SharedPreferences.getInstance();
-      await prefs.remove('auth_token');
+      await prefs.remove('token');
 
       Navigator.pushNamedAndRemoveUntil(
         context,
